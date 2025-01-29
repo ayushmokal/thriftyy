@@ -4,7 +4,7 @@ export function Features() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-24">
         <div className="relative">
           <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST6lrSsqBLMNiswMTZbWKKircm1ryvT4Z3uA&s"
+            src="https://cdn.hswstatic.com/gif/nfc-4.jpg"
             alt="Scanning clothes with NFC technology"
             className="w-full h-auto rounded-2xl shadow-xl"
             loading="lazy"
