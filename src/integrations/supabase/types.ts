@@ -70,38 +70,6 @@ export type Database = {
           },
         ]
       }
-      product_images: {
-        Row: {
-          created_at: string
-          id: string
-          image_type: string
-          image_url: string
-          product_id: string | null
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          image_type: string
-          image_url: string
-          product_id?: string | null
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          image_type?: string
-          image_url?: string
-          product_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "product_images_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       product_ownership: {
         Row: {
           created_at: string | null
@@ -143,7 +111,6 @@ export type Database = {
       products: {
         Row: {
           approved: boolean | null
-          brand_name: string | null
           category: Database["public"]["Enums"]["product_category"]
           color: string | null
           condition: string | null
@@ -152,7 +119,6 @@ export type Database = {
           id: string
           manufactured_date: string | null
           materials: string[] | null
-          model_name: string | null
           name: string
           original_price: number | null
           price: number
@@ -162,7 +128,6 @@ export type Database = {
         }
         Insert: {
           approved?: boolean | null
-          brand_name?: string | null
           category: Database["public"]["Enums"]["product_category"]
           color?: string | null
           condition?: string | null
@@ -171,7 +136,6 @@ export type Database = {
           id?: string
           manufactured_date?: string | null
           materials?: string[] | null
-          model_name?: string | null
           name: string
           original_price?: number | null
           price: number
@@ -181,7 +145,6 @@ export type Database = {
         }
         Update: {
           approved?: boolean | null
-          brand_name?: string | null
           category?: Database["public"]["Enums"]["product_category"]
           color?: string | null
           condition?: string | null
@@ -190,7 +153,6 @@ export type Database = {
           id?: string
           manufactured_date?: string | null
           materials?: string[] | null
-          model_name?: string | null
           name?: string
           original_price?: number | null
           price?: number
