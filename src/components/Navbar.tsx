@@ -1,5 +1,13 @@
-import { Search, Instagram, Moon, User } from "lucide-react";
+import { Search, ShoppingCart, Moon, User } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Button } from "./ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
 
 const Navbar = () => {
   return (
@@ -34,9 +42,24 @@ const Navbar = () => {
           <button className="hover:text-primary">
             <Search className="h-5 w-5" />
           </button>
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary">
-            <Instagram className="h-5 w-5" />
-          </a>
+          <Dialog>
+            <DialogTrigger asChild>
+              <button className="hover:text-primary">
+                <ShoppingCart className="h-5 w-5" />
+              </button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Shopping Cart</DialogTitle>
+              </DialogHeader>
+              <div className="py-4">
+                <p className="text-muted-foreground">Your cart is empty</p>
+              </div>
+              <Button className="w-full">
+                Checkout
+              </Button>
+            </DialogContent>
+          </Dialog>
           <button className="hover:text-primary">
             <Moon className="h-5 w-5" />
           </button>
