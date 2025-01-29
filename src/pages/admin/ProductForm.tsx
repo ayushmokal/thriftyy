@@ -13,7 +13,7 @@ import { useToast } from "@/components/ui/use-toast";
 type ProductFormData = {
   name: string;
   description: string;
-  price: number;
+  price: string; // Changed to string for form handling
   category: Tables<'products'>['category'];
   nft_image_url?: string;
   nfc_tag_id?: string;
@@ -23,7 +23,7 @@ const ProductForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { register, handleSubmit, setValue, watch } = useForm<ProductFormData>();
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<ProductFormData>();
 
   const { data: product, isLoading: isLoadingProduct } = useQuery({
     queryKey: ['product', id],
@@ -47,13 +47,19 @@ const ProductForm = () => {
 
   const createProduct = useMutation({
     mutationFn: async (data: ProductFormData) => {
+      // Convert price to number and validate
+      const numericPrice = parseFloat(data.price);
+      if (isNaN(numericPrice)) {
+        throw new Error('Invalid price value');
+      }
+
       // First create the product
       const { data: product, error: productError } = await supabase
         .from('products')
         .insert([{
           name: data.name,
           description: data.description,
-          price: data.price,
+          price: numericPrice, // Send as number
           category: data.category,
         }])
         .select()
@@ -68,7 +74,7 @@ const ProductForm = () => {
           .insert([{
             product_id: product.id,
             image_url: data.nft_image_url,
-            token_id: `TOKEN_${Date.now()}` // This should be generated properly in production
+            token_id: `TOKEN_${Date.now()}`
           }]);
 
         if (nftError) throw nftError;
@@ -108,13 +114,19 @@ const ProductForm = () => {
     mutationFn: async (data: ProductFormData) => {
       if (!id) throw new Error('No product ID provided');
 
+      // Convert price to number and validate
+      const numericPrice = parseFloat(data.price);
+      if (isNaN(numericPrice)) {
+        throw new Error('Invalid price value');
+      }
+
       // Update product
       const { error: productError } = await supabase
         .from('products')
         .update({
           name: data.name,
           description: data.description,
-          price: data.price,
+          price: numericPrice, // Send as number
           category: data.category,
         })
         .eq('id', id);
@@ -128,7 +140,7 @@ const ProductForm = () => {
           .upsert([{
             product_id: id,
             image_url: data.nft_image_url,
-            token_id: `TOKEN_${Date.now()}` // This should be generated properly in production
+            token_id: `TOKEN_${Date.now()}`
           }]);
 
         if (nftError) throw nftError;
@@ -183,7 +195,7 @@ const ProductForm = () => {
           <Label htmlFor="name">Name</Label>
           <Input
             id="name"
-            {...register('name')}
+            {...register('name', { required: true })}
             defaultValue={product?.name}
           />
         </div>
@@ -202,7 +214,12 @@ const ProductForm = () => {
           <Input
             id="price"
             type="number"
-            {...register('price')}
+            step="0.01"
+            min="0"
+            {...register('price', { 
+              required: true,
+              validate: value => !isNaN(parseFloat(value)) || "Please enter a valid number"
+            })}
             defaultValue={product?.price}
           />
         </div>
