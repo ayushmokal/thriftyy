@@ -4,8 +4,8 @@ export function Features() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-24">
         <div className="relative">
           <img
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/648461efaa8e4c7877b36ac06241466f4ca39481e5f54ba0ebca32a4ad8625ae?placeholderIfAbsent=true&width=100 100w, https://cdn.builder.io/api/v1/image/assets/TEMP/648461efaa8e4c7877b36ac06241466f4ca39481e5f54ba0ebca32a4ad8625ae?placeholderIfAbsent=true&width=200 200w, https://cdn.builder.io/api/v1/image/assets/TEMP/648461efaa8e4c7877b36ac06241466f4ca39481e5f54ba0ebca32a4ad8625ae?placeholderIfAbsent=true&width=400 400w, https://cdn.builder.io/api/v1/image/assets/TEMP/648461efaa8e4c7877b36ac06241466f4ca39481e5f54ba0ebca32a4ad8625ae?placeholderIfAbsent=true&width=800 800w, https://cdn.builder.io/api/v1/image/assets/TEMP/648461efaa8e4c7877b36ac06241466f4ca39481e5f54ba0ebca32a4ad8625ae?placeholderIfAbsent=true&width=1200 1200w, https://cdn.builder.io/api/v1/image/assets/TEMP/648461efaa8e4c7877b36ac06241466f4ca39481e5f54ba0ebca32a4ad8625ae?placeholderIfAbsent=true&width=1600 1600w, https://cdn.builder.io/api/v1/image/assets/TEMP/648461efaa8e4c7877b36ac06241466f4ca39481e5f54ba0ebca32a4ad8625ae?placeholderIfAbsent=true&width=2000 2000w, https://cdn.builder.io/api/v1/image/assets/TEMP/648461efaa8e4c7877b36ac06241466f4ca39481e5f54ba0ebca32a4ad8625ae?placeholderIfAbsent=true"
-            alt="Innovation in clothing"
+            src="https://images.unsplash.com/photo-1617347454431-f49d7ff5c3b1?q=80&w=2070&auto=format&fit=crop"
+            alt="Scanning clothes with NFC technology"
             className="w-full h-auto rounded-2xl shadow-xl"
             loading="lazy"
           />
