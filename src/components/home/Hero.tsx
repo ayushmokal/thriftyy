@@ -20,8 +20,8 @@ export function Hero() {
         </div>
         <div className="relative">
           <img
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/89f9675e74b214df827b4c3b56215a9a44e8f081c0490e03986b5e82d6fdd3a0?placeholderIfAbsent=true&width=100 100w, https://cdn.builder.io/api/v1/image/assets/TEMP/89f9675e74b214df827b4c3b56215a9a44e8f081c0490e03986b5e82d6fdd3a0?placeholderIfAbsent=true&width=200 200w, https://cdn.builder.io/api/v1/image/assets/TEMP/89f9675e74b214df827b4c3b56215a9a44e8f081c0490e03986b5e82d6fdd3a0?placeholderIfAbsent=true&width=400 400w, https://cdn.builder.io/api/v1/image/assets/TEMP/89f9675e74b214df827b4c3b56215a9a44e8f081c0490e03986b5e82d6fdd3a0?placeholderIfAbsent=true&width=800 800w, https://cdn.builder.io/api/v1/image/assets/TEMP/89f9675e74b214df827b4c3b56215a9a44e8f081c0490e03986b5e82d6fdd3a0?placeholderIfAbsent=true&width=1200 1200w, https://cdn.builder.io/api/v1/image/assets/TEMP/89f9675e74b214df827b4c3b56215a9a44e8f081c0490e03986b5e82d6fdd3a0?placeholderIfAbsent=true&width=1600 1600w, https://cdn.builder.io/api/v1/image/assets/TEMP/89f9675e74b214df827b4c3b56215a9a44e8f081c0490e03986b5e82d6fdd3a0?placeholderIfAbsent=true&width=2000 2000w, https://cdn.builder.io/api/v1/image/assets/TEMP/89f9675e74b214df827b4c3b56215a9a44e8f081c0490e03986b5e82d6fdd3a0?placeholderIfAbsent=true"
-            alt="Hero fashion"
+            src="https://images.unsplash.com/photo-1581539250439-c96689b516dd?q=80&w=1965&auto=format&fit=crop"
+            alt="Modern wardrobe with organized clothing"
             className="w-full h-auto rounded-2xl shadow-xl"
             loading="lazy"
           />
