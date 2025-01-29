@@ -20,8 +20,8 @@ export function Hero() {
         </div>
         <div className="relative">
           <img
-            src="https://images.unsplash.com/photo-1581539250439-c96689b516dd?q=80&w=1965&auto=format&fit=crop"
-            alt="Modern wardrobe with organized clothing"
+            src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop"
+            alt="Stylish clothing rack with organized fashion items"
             className="w-full h-auto rounded-2xl shadow-xl"
             loading="lazy"
           />
