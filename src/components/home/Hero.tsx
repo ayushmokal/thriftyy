@@ -5,9 +5,6 @@ export function Hero() {
     <section className="container mx-auto px-4 py-16 md:py-24">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
         <div className="space-y-6">
-          <div className="inline-block bg-primary/10 px-4 py-2 rounded-full">
-            <span className="text-primary font-semibold">SELL</span>
-          </div>
           <h1 className="text-4xl md:text-6xl font-bold leading-tight">
             NFC<br />Clothing & THRIFTING
           </h1>
