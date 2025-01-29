@@ -7,6 +7,7 @@ import AdminDashboard from "./pages/admin/Dashboard";
 import AdminProducts from "./pages/admin/Products";
 import AdminProductForm from "./pages/admin/ProductForm";
 import ProductDetails from "./pages/ProductDetails";
+import SellPage from "./pages/SellPage";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
             <Route path="/admin/products/new" element={<AdminProductForm />} />
             <Route path="/admin/products/:id/edit" element={<AdminProductForm />} />
             <Route path="/products/:id" element={<ProductDetails />} />
+            <Route path="/sell" element={<SellPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
