@@ -16,11 +16,13 @@ export function Hero() {
           </Button>
         </div>
         <div className="relative">
-          <img
-            src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop"
-            alt="Stylish clothing rack with organized fashion items"
-            className="w-full h-auto rounded-2xl shadow-xl"
-            loading="lazy"
+          <video
+            src="https://videos.pexels.com/video-files/5743177/5743177-uhd_2732_1440_25fps.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-auto rounded-2xl shadow-xl object-cover"
           />
         </div>
       </div>
