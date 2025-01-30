@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LogOut, Plus, RefreshCw } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
 
 type Product = Database["public"]["Tables"]["products"]["Row"];
@@ -187,175 +189,210 @@ const AdminDashboard = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-          <Button variant="outline" onClick={handleLogout}>
-            Logout
-          </Button>
+          <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
+          <div className="flex gap-4">
+            <Button 
+              variant="outline" 
+              size="icon"
+              onClick={() => {
+                fetchPendingProducts();
+                fetchAllProducts();
+                fetchContactSubmissions();
+              }}
+              className="animate-in fade-in duration-300"
+            >
+              <RefreshCw className="h-4 w-4" />
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={handleLogout}
+              className="flex items-center gap-2 animate-in fade-in duration-300"
+            >
+              <LogOut className="h-4 w-4" />
+              Logout
+            </Button>
+          </div>
         </div>
 
-        <Tabs defaultValue="sell-requests" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="sell-requests">Sell Requests</TabsTrigger>
-            <TabsTrigger value="manage-products">Manage Products</TabsTrigger>
-            <TabsTrigger value="add-product">Add Product</TabsTrigger>
-            <TabsTrigger value="contact-submissions">Contact Enquiries</TabsTrigger>
+        <Tabs defaultValue="sell-requests" className="w-full space-y-6">
+          <TabsList className="grid w-full grid-cols-4 h-12">
+            <TabsTrigger value="sell-requests" className="text-sm">Sell Requests</TabsTrigger>
+            <TabsTrigger value="manage-products" className="text-sm">Manage Products</TabsTrigger>
+            <TabsTrigger value="add-product" className="text-sm">Add Product</TabsTrigger>
+            <TabsTrigger value="contact-submissions" className="text-sm">Contact Enquiries</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="sell-requests">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Pending Sell Requests</h2>
-              <div className="space-y-4">
+          <TabsContent value="sell-requests" className="space-y-6 animate-in fade-in duration-300">
+            <Card>
+              <CardHeader>
+                <CardTitle>Pending Sell Requests</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
                 {pendingProducts.length === 0 ? (
-                  <p className="text-gray-500">No pending products to review</p>
+                  <p className="text-muted-foreground text-center py-8">No pending products to review</p>
                 ) : (
                   pendingProducts.map((product) => (
-                    <div
-                      key={product.id}
-                      className="border rounded-lg p-4 flex justify-between items-center"
-                    >
-                      <div>
-                        <h3 className="font-semibold">{product.name}</h3>
-                        <p className="text-sm text-gray-600">
-                          {product.description}
-                        </p>
-                        <p className="text-sm">
-                          Price: ₹{product.price} | Category: {product.category}
-                        </p>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button
-                          variant="default"
-                          onClick={() => handleApprove(product.id)}
-                        >
-                          Approve
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          onClick={() => handleReject(product.id)}
-                        >
-                          Reject
-                        </Button>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="manage-products">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Manage Products</h2>
-              <div className="space-y-4">
-                {allProducts.length === 0 ? (
-                  <p className="text-gray-500">No products found</p>
-                ) : (
-                  allProducts.map((product) => (
-                    <div
-                      key={product.id}
-                      className="border rounded-lg p-4 flex justify-between items-center"
-                    >
-                      <div>
-                        <div className="flex items-center gap-2">
+                    <Card key={product.id} className="hover:shadow-md transition-shadow">
+                      <CardContent className="flex justify-between items-start p-6">
+                        <div className="space-y-2">
                           <h3 className="font-semibold">{product.name}</h3>
-                          <span className={`px-2 py-1 rounded-full text-xs ${
-                            product.approved 
-                              ? "bg-green-100 text-green-800"
-                              : "bg-yellow-100 text-yellow-800"
-                          }`}>
-                            {product.approved ? "Approved" : "Pending"}
-                          </span>
-                        </div>
-                        <p className="text-sm text-gray-600">
-                          {product.description}
-                        </p>
-                        <p className="text-sm">
-                          Price: ₹{product.price} | Category: {product.category}
-                        </p>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          onClick={() => handleEdit(product.id)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          onClick={() => handleDelete(product.id)}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="add-product">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Add New Product</h2>
-              <Button onClick={() => navigate("/admin/dashboard/add")}>
-                Add New Product
-              </Button>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="contact-submissions">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Contact Form Submissions</h2>
-              <div className="space-y-4">
-                {contactSubmissions.length === 0 ? (
-                  <p className="text-gray-500">No contact submissions yet</p>
-                ) : (
-                  contactSubmissions.map((submission) => (
-                    <div
-                      key={submission.id}
-                      className="border rounded-lg p-4 hover:shadow-md transition-shadow"
-                    >
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="font-semibold">{submission.name}</h3>
-                          <p className="text-sm text-gray-600">{submission.email}</p>
-                          <p className="mt-2">{submission.message}</p>
-                          <p className="text-sm text-gray-500 mt-2">
-                            Submitted on: {new Date(submission.created_at).toLocaleString()}
-                          </p>
+                          <p className="text-sm text-muted-foreground">{product.description}</p>
+                          <div className="flex gap-4 text-sm text-muted-foreground">
+                            <span>₹{product.price}</span>
+                            <span>{product.category}</span>
+                          </div>
                         </div>
                         <div className="flex gap-2">
                           <Button
-                            variant={submission.status === 'pending' ? 'default' : 'outline'}
-                            onClick={() => updateSubmissionStatus(submission.id, 'pending')}
+                            variant="default"
                             size="sm"
+                            onClick={() => handleApprove(product.id)}
                           >
-                            Pending
+                            Approve
                           </Button>
                           <Button
-                            variant={submission.status === 'in-progress' ? 'default' : 'outline'}
-                            onClick={() => updateSubmissionStatus(submission.id, 'in-progress')}
+                            variant="destructive"
                             size="sm"
+                            onClick={() => handleReject(product.id)}
                           >
-                            In Progress
-                          </Button>
-                          <Button
-                            variant={submission.status === 'completed' ? 'default' : 'outline'}
-                            onClick={() => updateSubmissionStatus(submission.id, 'completed')}
-                            size="sm"
-                          >
-                            Completed
+                            Reject
                           </Button>
                         </div>
-                      </div>
-                    </div>
+                      </CardContent>
+                    </Card>
                   ))
                 )}
-              </div>
-            </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="manage-products" className="space-y-6 animate-in fade-in duration-300">
+            <Card>
+              <CardHeader>
+                <CardTitle>All Products</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {allProducts.length === 0 ? (
+                  <p className="text-muted-foreground text-center py-8">No products found</p>
+                ) : (
+                  allProducts.map((product) => (
+                    <Card key={product.id} className="hover:shadow-md transition-shadow">
+                      <CardContent className="flex justify-between items-start p-6">
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-semibold">{product.name}</h3>
+                            <span className={`px-2 py-1 rounded-full text-xs ${
+                              product.approved 
+                                ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100"
+                                : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100"
+                            }`}>
+                              {product.approved ? "Approved" : "Pending"}
+                            </span>
+                          </div>
+                          <p className="text-sm text-muted-foreground">{product.description}</p>
+                          <div className="flex gap-4 text-sm text-muted-foreground">
+                            <span>₹{product.price}</span>
+                            <span>{product.category}</span>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleEdit(product.id)}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => handleDelete(product.id)}
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="add-product" className="animate-in fade-in duration-300">
+            <Card>
+              <CardHeader>
+                <CardTitle>Add New Product</CardTitle>
+              </CardHeader>
+              <CardContent className="py-6">
+                <Button 
+                  onClick={() => navigate("/admin/dashboard/add")}
+                  className="flex items-center gap-2"
+                >
+                  <Plus className="h-4 w-4" />
+                  Add New Product
+                </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="contact-submissions" className="space-y-6 animate-in fade-in duration-300">
+            <Card>
+              <CardHeader>
+                <CardTitle>Contact Form Submissions</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {contactSubmissions.length === 0 ? (
+                  <p className="text-muted-foreground text-center py-8">No contact submissions yet</p>
+                ) : (
+                  contactSubmissions.map((submission) => (
+                    <Card key={submission.id} className="hover:shadow-md transition-shadow">
+                      <CardContent className="p-6">
+                        <div className="flex justify-between items-start">
+                          <div className="space-y-2">
+                            <h3 className="font-semibold">{submission.name}</h3>
+                            <p className="text-sm text-muted-foreground">{submission.email}</p>
+                            <p className="mt-2 text-sm">{submission.message}</p>
+                            <p className="text-xs text-muted-foreground">
+                              Submitted on: {new Date(submission.created_at).toLocaleString()}
+                            </p>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button
+                              variant={submission.status === 'pending' ? 'default' : 'outline'}
+                              size="sm"
+                              onClick={() => updateSubmissionStatus(submission.id, 'pending')}
+                              className="min-w-[80px]"
+                            >
+                              Pending
+                            </Button>
+                            <Button
+                              variant={submission.status === 'in-progress' ? 'default' : 'outline'}
+                              size="sm"
+                              onClick={() => updateSubmissionStatus(submission.id, 'in-progress')}
+                              className="min-w-[80px]"
+                            >
+                              In Progress
+                            </Button>
+                            <Button
+                              variant={submission.status === 'completed' ? 'default' : 'outline'}
+                              size="sm"
+                              onClick={() => updateSubmissionStatus(submission.id, 'completed')}
+                              className="min-w-[80px]"
+                            >
+                              Completed
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
