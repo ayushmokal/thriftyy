@@ -10,6 +10,7 @@ type Product = Database["public"]["Tables"]["products"]["Row"];
 
 const AdminDashboard = () => {
   const [pendingProducts, setPendingProducts] = useState<Product[]>([]);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -20,6 +21,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     fetchPendingProducts();
+    fetchAllProducts();
   }, []);
 
   const fetchPendingProducts = async () => {
@@ -31,6 +33,24 @@ const AdminDashboard = () => {
 
       if (error) throw error;
       setPendingProducts(data || []);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const fetchAllProducts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setAllProducts(data || []);
     } catch (error: any) {
       toast({
         title: "Error",
@@ -55,6 +75,7 @@ const AdminDashboard = () => {
       });
 
       fetchPendingProducts();
+      fetchAllProducts();
     } catch (error: any) {
       toast({
         title: "Error",
@@ -79,6 +100,7 @@ const AdminDashboard = () => {
       });
 
       fetchPendingProducts();
+      fetchAllProducts();
     } catch (error: any) {
       toast({
         title: "Error",
@@ -86,6 +108,34 @@ const AdminDashboard = () => {
         variant: "destructive",
       });
     }
+  };
+
+  const handleDelete = async (productId: string) => {
+    try {
+      const { error } = await supabase
+        .from("products")
+        .delete()
+        .eq("id", productId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Product deleted successfully",
+      });
+
+      fetchAllProducts();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleEdit = (productId: string) => {
+    navigate(`/admin/dashboard/edit/${productId}`);
   };
 
   return (
@@ -99,8 +149,9 @@ const AdminDashboard = () => {
         </div>
 
         <Tabs defaultValue="sell-requests" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="sell-requests">Sell Requests</TabsTrigger>
+            <TabsTrigger value="manage-products">Manage Products</TabsTrigger>
             <TabsTrigger value="add-product">Add Product</TabsTrigger>
           </TabsList>
           
@@ -137,6 +188,57 @@ const AdminDashboard = () => {
                           onClick={() => handleReject(product.id)}
                         >
                           Reject
+                        </Button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="manage-products">
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-xl font-semibold mb-4">Manage Products</h2>
+              <div className="space-y-4">
+                {allProducts.length === 0 ? (
+                  <p className="text-gray-500">No products found</p>
+                ) : (
+                  allProducts.map((product) => (
+                    <div
+                      key={product.id}
+                      className="border rounded-lg p-4 flex justify-between items-center"
+                    >
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-semibold">{product.name}</h3>
+                          <span className={`px-2 py-1 rounded-full text-xs ${
+                            product.approved 
+                              ? "bg-green-100 text-green-800"
+                              : "bg-yellow-100 text-yellow-800"
+                          }`}>
+                            {product.approved ? "Approved" : "Pending"}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          {product.description}
+                        </p>
+                        <p className="text-sm">
+                          Price: ₹{product.price} | Category: {product.category}
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => handleEdit(product.id)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          onClick={() => handleDelete(product.id)}
+                        >
+                          Delete
                         </Button>
                       </div>
                     </div>
