@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { useNavigate } from "react-router-dom";
 
 interface Product {
   id: string;
@@ -20,6 +21,7 @@ export default function Thrift() {
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<"Jeans" | "Shirts" | "Tshirts" | "Shoes" | "Watches" | "all">("all");
   const categories = ["all", "Jeans", "Shirts", "Tshirts", "Shoes", "Watches"] as const;
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProducts();
@@ -49,6 +51,10 @@ export default function Thrift() {
     }
   };
 
+  const handleProductClick = (productId: string) => {
+    navigate(`/product/${productId}`);
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -72,7 +78,11 @@ export default function Thrift() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {products.map((product) => (
-              <Card key={product.id} className="overflow-hidden">
+              <Card 
+                key={product.id} 
+                className="overflow-hidden cursor-pointer transition-transform hover:scale-105"
+                onClick={() => handleProductClick(product.id)}
+              >
                 <CardContent className="p-4">
                   <div className="aspect-square overflow-hidden rounded-lg mb-4">
                     <img

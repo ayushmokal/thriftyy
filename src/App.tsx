@@ -1,22 +1,38 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Index from "@/pages/Index";
-import NotFound from "@/pages/NotFound";
-import Thrift from "@/pages/Thrift";
-import Login from "@/pages/admin/Login";
-import Dashboard from "@/pages/admin/Dashboard";
+import { createBrowserRouter } from "react-router-dom";
+import Index from "./pages/Index";
+import NotFound from "./pages/NotFound";
+import Thrift from "./pages/Thrift";
+import ProductPreview from "./pages/ProductPreview";
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminRoute from "./components/AdminRoute";
 
-function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/thrift" element={<Thrift />} />
-        <Route path="/admin/login" element={<Login />} />
-        <Route path="/admin/dashboard" element={<Dashboard />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Router>
-  );
-}
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Index />,
+    errorElement: <NotFound />,
+  },
+  {
+    path: "/thrift",
+    element: <Thrift />,
+  },
+  {
+    path: "/product/:id",
+    element: <ProductPreview />,
+  },
+  {
+    path: "/admin/login",
+    element: <AdminLogin />,
+  },
+  {
+    path: "/admin/dashboard",
+    element: (
+      <AdminRoute>
+        <AdminDashboard />
+      </AdminRoute>
+    ),
+  },
+]);
 
-export default App;
+export default router;
