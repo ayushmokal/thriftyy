@@ -36,7 +36,8 @@ export default function Thrift() {
           product_images (
             image_url
           )
-        `);
+        `)
+        .eq('approved', true); // Only fetch approved products
 
       if (selectedCategory !== "all") {
         query = query.eq("category", selectedCategory);
