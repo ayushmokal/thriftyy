@@ -9,6 +9,7 @@ import Dashboard from "./pages/admin/Dashboard";
 import AdminRoute from "./components/admin/AdminRoute";
 import Sell from "./pages/Sell";
 import About from "./pages/About";
+import Contact from "./pages/Contact";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
   {
     path: "/about",
     element: <About />,
+  },
+  {
+    path: "/contact",
+    element: <Contact />,
   },
   {
     path: "/admin/login",

@@ -32,6 +32,9 @@ const Navbar = () => {
           <Link to="/sell" className="text-sm font-medium hover:text-primary">
             SELL
           </Link>
+          <Link to="/contact" className="text-sm font-medium hover:text-primary">
+            CONTACT
+          </Link>
         </div>
 
         {/* Right Icons */}
