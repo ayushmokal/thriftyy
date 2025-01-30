@@ -13,12 +13,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import type { Database } from "@/integrations/supabase/types";
+
+type ProductCategory = Database["public"]["Enums"]["product_category"];
 
 const AdminDashboard = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState<ProductCategory>("Jeans");
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -50,7 +53,7 @@ const AdminDashboard = () => {
       setName("");
       setDescription("");
       setPrice("");
-      setCategory("");
+      setCategory("Jeans");
     } catch (error: any) {
       toast({
         title: "Error",
@@ -107,7 +110,7 @@ const AdminDashboard = () => {
 
             <div className="space-y-2">
               <Label htmlFor="category">Category</Label>
-              <Select value={category} onValueChange={setCategory} required>
+              <Select value={category} onValueChange={(value: ProductCategory) => setCategory(value)} required>
                 <SelectTrigger>
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>

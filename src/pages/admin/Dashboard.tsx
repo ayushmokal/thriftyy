@@ -12,16 +12,31 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
+
+type ProductCategory = Database["public"]["Enums"]["product_category"];
+
+type FormData = {
+  name: string;
+  description: string;
+  price: string;
+  category: ProductCategory;
+  color: string;
+  size: string;
+  condition: string;
+  brand_name: string;
+  model_name: string;
+};
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     description: "",
     price: "",
-    category: "",
+    category: "Jeans",
     color: "",
     size: "",
     condition: "",
@@ -60,7 +75,6 @@ export default function Dashboard() {
 
       if (productError) throw productError;
 
-      // Upload image if selected
       if (imageFile && product) {
         const fileExt = imageFile.name.split(".").pop();
         const filePath = `${product.id}-${Math.random()}.${fileExt}`;
@@ -100,7 +114,7 @@ export default function Dashboard() {
         name: "",
         description: "",
         price: "",
-        category: "",
+        category: "Jeans",
         color: "",
         size: "",
         condition: "",
@@ -153,7 +167,7 @@ export default function Dashboard() {
                 <label className="text-sm font-medium">Category</label>
                 <Select
                   value={formData.category}
-                  onValueChange={(value) =>
+                  onValueChange={(value: ProductCategory) =>
                     setFormData({ ...formData, category: value })
                   }
                   required
@@ -232,6 +246,7 @@ export default function Dashboard() {
                   }
                 />
               </div>
+
             </div>
 
             <div className="space-y-2">
