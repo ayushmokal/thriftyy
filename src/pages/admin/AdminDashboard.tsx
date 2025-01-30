@@ -7,10 +7,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Database } from "@/integrations/supabase/types";
 
 type Product = Database["public"]["Tables"]["products"]["Row"];
+type ContactSubmission = Database["public"]["Tables"]["contact_submissions"]["Row"];
 
 const AdminDashboard = () => {
   const [pendingProducts, setPendingProducts] = useState<Product[]>([]);
   const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [contactSubmissions, setContactSubmissions] = useState<ContactSubmission[]>([]);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -18,11 +20,6 @@ const AdminDashboard = () => {
     await supabase.auth.signOut();
     navigate("/admin/login");
   };
-
-  useEffect(() => {
-    fetchPendingProducts();
-    fetchAllProducts();
-  }, []);
 
   const fetchPendingProducts = async () => {
     try {
@@ -60,22 +57,15 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleApprove = async (productId: string) => {
+  const fetchContactSubmissions = async () => {
     try {
-      const { error } = await supabase
-        .from("products")
-        .update({ approved: true })
-        .eq("id", productId);
+      const { data, error } = await supabase
+        .from("contact_submissions")
+        .select("*")
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "Product approved successfully",
-      });
-
-      fetchPendingProducts();
-      fetchAllProducts();
+      setContactSubmissions(data || []);
     } catch (error: any) {
       toast({
         title: "Error",
@@ -85,22 +75,21 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleReject = async (productId: string) => {
+  const updateSubmissionStatus = async (id: string, status: string) => {
     try {
       const { error } = await supabase
-        .from("products")
-        .delete()
-        .eq("id", productId);
+        .from("contact_submissions")
+        .update({ status })
+        .eq("id", id);
 
       if (error) throw error;
 
       toast({
         title: "Success",
-        description: "Product rejected and removed",
+        description: "Status updated successfully",
       });
 
-      fetchPendingProducts();
-      fetchAllProducts();
+      fetchContactSubmissions();
     } catch (error: any) {
       toast({
         title: "Error",
@@ -110,33 +99,11 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleDelete = async (productId: string) => {
-    try {
-      const { error } = await supabase
-        .from("products")
-        .delete()
-        .eq("id", productId);
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "Product deleted successfully",
-      });
-
-      fetchAllProducts();
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleEdit = (productId: string) => {
-    navigate(`/admin/dashboard/edit/${productId}`);
-  };
+  useEffect(() => {
+    fetchPendingProducts();
+    fetchAllProducts();
+    fetchContactSubmissions();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -149,10 +116,11 @@ const AdminDashboard = () => {
         </div>
 
         <Tabs defaultValue="sell-requests" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="sell-requests">Sell Requests</TabsTrigger>
             <TabsTrigger value="manage-products">Manage Products</TabsTrigger>
             <TabsTrigger value="add-product">Add Product</TabsTrigger>
+            <TabsTrigger value="contact-submissions">Contact Enquiries</TabsTrigger>
           </TabsList>
           
           <TabsContent value="sell-requests">
@@ -254,6 +222,58 @@ const AdminDashboard = () => {
               <Button onClick={() => navigate("/admin/dashboard/add")}>
                 Add New Product
               </Button>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="contact-submissions">
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-xl font-semibold mb-4">Contact Form Submissions</h2>
+              <div className="space-y-4">
+                {contactSubmissions.length === 0 ? (
+                  <p className="text-gray-500">No contact submissions yet</p>
+                ) : (
+                  contactSubmissions.map((submission) => (
+                    <div
+                      key={submission.id}
+                      className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                    >
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="font-semibold">{submission.name}</h3>
+                          <p className="text-sm text-gray-600">{submission.email}</p>
+                          <p className="mt-2">{submission.message}</p>
+                          <p className="text-sm text-gray-500 mt-2">
+                            Submitted on: {new Date(submission.created_at).toLocaleString()}
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            variant={submission.status === 'pending' ? 'default' : 'outline'}
+                            onClick={() => updateSubmissionStatus(submission.id, 'pending')}
+                            size="sm"
+                          >
+                            Pending
+                          </Button>
+                          <Button
+                            variant={submission.status === 'in-progress' ? 'default' : 'outline'}
+                            onClick={() => updateSubmissionStatus(submission.id, 'in-progress')}
+                            size="sm"
+                          >
+                            In Progress
+                          </Button>
+                          <Button
+                            variant={submission.status === 'completed' ? 'default' : 'outline'}
+                            onClick={() => updateSubmissionStatus(submission.id, 'completed')}
+                            size="sm"
+                          >
+                            Completed
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
           </TabsContent>
         </Tabs>
