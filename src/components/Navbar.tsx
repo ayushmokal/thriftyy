@@ -26,9 +26,6 @@ const Navbar = () => {
           <Link to="/thrift" className="text-sm font-medium hover:text-primary">
             THRIFT
           </Link>
-          <Link to="/explore" className="text-sm font-medium hover:text-primary">
-            EXPLORE
-          </Link>
           <Link to="/about" className="text-sm font-medium hover:text-primary">
             ABOUT
           </Link>
