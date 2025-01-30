@@ -1,11 +1,11 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Thrift from "./pages/Thrift";
 import ProductPreview from "./pages/ProductPreview";
-import AdminLogin from "./pages/AdminLogin";
-import AdminDashboard from "./pages/AdminDashboard";
-import AdminRoute from "./components/AdminRoute";
+import AdminLogin from "./pages/admin/Login";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminRoute from "./components/admin/AdminRoute";
 
 const router = createBrowserRouter([
   {
@@ -35,4 +35,8 @@ const router = createBrowserRouter([
   },
 ]);
 
-export default router;
+const App = () => {
+  return <RouterProvider router={router} />;
+};
+
+export default App;
