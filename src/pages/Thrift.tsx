@@ -54,8 +54,6 @@ export default function Thrift() {
       <Navbar />
       <main className="flex-grow">
         <div className="container mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold text-center mb-8">Thrift Store</h1>
-
           <div className="flex justify-center gap-4 mb-8">
             {categories.map((category) => (
               <button
