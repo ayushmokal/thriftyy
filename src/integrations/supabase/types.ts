@@ -9,67 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      nfc_tags: {
-        Row: {
-          created_at: string
-          id: string
-          product_id: string | null
-          tag_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          product_id?: string | null
-          tag_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          product_id?: string | null
-          tag_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "nfc_tags_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      nfts: {
-        Row: {
-          created_at: string
-          id: string
-          image_url: string
-          product_id: string | null
-          token_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          image_url: string
-          product_id?: string | null
-          token_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          image_url?: string
-          product_id?: string | null
-          token_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "nfts_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       product_images: {
         Row: {
           created_at: string
@@ -95,44 +34,6 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "product_images_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      product_ownership: {
-        Row: {
-          created_at: string | null
-          end_date: string | null
-          id: string
-          owner_id: string | null
-          price_paid: number | null
-          product_id: string | null
-          start_date: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          end_date?: string | null
-          id?: string
-          owner_id?: string | null
-          price_paid?: number | null
-          product_id?: string | null
-          start_date?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          end_date?: string | null
-          id?: string
-          owner_id?: string | null
-          price_paid?: number | null
-          product_id?: string | null
-          start_date?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "product_ownership_product_id_fkey"
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
@@ -197,33 +98,6 @@ export type Database = {
           size?: string | null
           texture?: string | null
           updated_at?: string
-        }
-        Relationships: []
-      }
-      user_social_media: {
-        Row: {
-          created_at: string | null
-          id: string
-          platform: string
-          url: string
-          user_id: string | null
-          username: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          platform: string
-          url: string
-          user_id?: string | null
-          username: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          platform?: string
-          url?: string
-          user_id?: string | null
-          username?: string
         }
         Relationships: []
       }
