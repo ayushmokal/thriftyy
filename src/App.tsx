@@ -7,6 +7,7 @@ import Login from "./pages/admin/Login";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import Dashboard from "./pages/admin/Dashboard";
 import AdminRoute from "./components/admin/AdminRoute";
+import Sell from "./pages/Sell";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
   {
     path: "/product/:id",
     element: <ProductPreview />,
+  },
+  {
+    path: "/sell",
+    element: <Sell />,
   },
   {
     path: "/admin/login",
