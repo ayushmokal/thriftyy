@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 interface Product {
   id: string;
@@ -23,6 +25,7 @@ export default function ProductPreview() {
   const { id } = useParams();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -49,6 +52,16 @@ export default function ProductPreview() {
 
     fetchProduct();
   }, [id]);
+
+  const handleBuyNow = async () => {
+    if (!product) return;
+    
+    // For now, show a success message
+    toast({
+      title: "Order Placed!",
+      description: `Thank you for purchasing ${product.name}. We'll contact you soon with delivery details.`,
+    });
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -80,7 +93,14 @@ export default function ProductPreview() {
             <div className="space-y-6">
               <div>
                 <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-                <p className="text-2xl font-semibold text-primary">₹{product.price}</p>
+                <p className="text-2xl font-semibold text-primary mb-4">₹{product.price}</p>
+                <Button 
+                  className="w-full mb-6" 
+                  size="lg"
+                  onClick={handleBuyNow}
+                >
+                  Buy Now
+                </Button>
               </div>
               
               <div className="space-y-4">
