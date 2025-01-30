@@ -21,6 +21,87 @@ const AdminDashboard = () => {
     navigate("/admin/login");
   };
 
+  const handleApprove = async (productId: string) => {
+    try {
+      const { error } = await supabase
+        .from("products")
+        .update({ approved: true })
+        .eq("id", productId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Product approved successfully",
+      });
+
+      // Refresh the products lists
+      fetchPendingProducts();
+      fetchAllProducts();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleReject = async (productId: string) => {
+    try {
+      const { error } = await supabase
+        .from("products")
+        .delete()
+        .eq("id", productId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Product rejected and removed",
+      });
+
+      // Refresh the products lists
+      fetchPendingProducts();
+      fetchAllProducts();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleEdit = (productId: string) => {
+    navigate(`/admin/dashboard/edit/${productId}`);
+  };
+
+  const handleDelete = async (productId: string) => {
+    try {
+      const { error } = await supabase
+        .from("products")
+        .delete()
+        .eq("id", productId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Product deleted successfully",
+      });
+
+      // Refresh the products list
+      fetchAllProducts();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   const fetchPendingProducts = async () => {
     try {
       const { data, error } = await supabase
