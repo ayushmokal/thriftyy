@@ -190,7 +190,7 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
 
       const wasAdded = await window.ethereum.request({
         method: 'wallet_watchAsset',
-        params: {
+        params: [{
           type: 'ERC20',
           options: {
             address: tokenAddress,
@@ -198,7 +198,7 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
             decimals: decimals,
             image: image,
           },
-        },
+        }],
       });
 
       if (wasAdded) {
