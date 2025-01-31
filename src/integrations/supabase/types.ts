@@ -87,6 +87,10 @@ export type Database = {
           size: string | null
           texture: string | null
           updated_at: string
+          nfc_tag_id: string | null;
+          token_id: number | null;
+          blockchain_network: string | null;
+          contract_address: string | null;
         }
         Insert: {
           approved?: boolean | null
@@ -106,6 +110,10 @@ export type Database = {
           size?: string | null
           texture?: string | null
           updated_at?: string
+          nfc_tag_id?: string | null;
+          token_id?: number | null;
+          blockchain_network?: string | null;
+          contract_address?: string | null;
         }
         Update: {
           approved?: boolean | null
@@ -125,9 +133,51 @@ export type Database = {
           size?: string | null
           texture?: string | null
           updated_at?: string
+          nfc_tag_id?: string | null;
+          token_id?: number | null;
+          blockchain_network?: string | null;
+          contract_address?: string | null;
         }
         Relationships: []
       }
+      nfc_tag_writes: {
+        Row: {
+          id: string;
+          product_id: string | null;
+          nfc_tag_id: string;
+          write_date: string | null;
+          write_status: string | null;
+          write_method: string;
+          write_data: Json | null;
+        };
+        Insert: {
+          id?: string;
+          product_id?: string | null;
+          nfc_tag_id: string;
+          write_date?: string | null;
+          write_status?: string | null;
+          write_method: string;
+          write_data?: Json | null;
+        };
+        Update: {
+          id?: string;
+          product_id?: string | null;
+          nfc_tag_id?: string;
+          write_date?: string | null;
+          write_status?: string | null;
+          write_method?: string;
+          write_data?: Json | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "nfc_tag_writes_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
     }
     Views: {
       [_ in never]: never
@@ -153,7 +203,7 @@ export type Tables<
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
         Database[PublicTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
       Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {

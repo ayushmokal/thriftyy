@@ -218,10 +218,11 @@ const AdminDashboard = () => {
         </div>
 
         <Tabs defaultValue="sell-requests" className="w-full space-y-6">
-          <TabsList className="grid w-full grid-cols-4 h-12">
+          <TabsList className="grid w-full grid-cols-5 h-12">
             <TabsTrigger value="sell-requests" className="text-sm">Sell Requests</TabsTrigger>
             <TabsTrigger value="manage-products" className="text-sm">Manage Products</TabsTrigger>
             <TabsTrigger value="add-product" className="text-sm">Add Product</TabsTrigger>
+            <TabsTrigger value="nfc-tags" className="text-sm">NFC Tags</TabsTrigger>
             <TabsTrigger value="contact-submissions" className="text-sm">Contact Enquiries</TabsTrigger>
           </TabsList>
           
@@ -335,6 +336,42 @@ const AdminDashboard = () => {
                   <Plus className="h-4 w-4" />
                   Add New Product
                 </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="nfc-tags" className="space-y-6 animate-in fade-in duration-300">
+            <Card>
+              <CardHeader>
+                <CardTitle>NFC Tag Management</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {allProducts.filter(p => !p.nfc_tag_id).map((product) => (
+                  <Card key={product.id} className="hover:shadow-md transition-shadow">
+                    <CardContent className="p-6">
+                      <div className="flex justify-between items-start">
+                        <div className="space-y-2">
+                          <h3 className="font-semibold">{product.name}</h3>
+                          <p className="text-sm text-muted-foreground">{product.description}</p>
+                          <div className="flex gap-4 text-sm text-muted-foreground">
+                            <span>₹{product.price}</span>
+                            <span>{product.category}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mt-4">
+                        <NfcTagWriter 
+                          productId={product.id} 
+                          tokenId={product.token_id} 
+                          contractAddress={product.contract_address}
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+                {allProducts.filter(p => !p.nfc_tag_id).length === 0 && (
+                  <p className="text-muted-foreground text-center py-8">No products need NFC tags</p>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
