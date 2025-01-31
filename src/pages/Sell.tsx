@@ -77,21 +77,19 @@ const Sell = () => {
       );
 
       // Save to Supabase
-      const { error } = await supabase.from("products").insert([
-        {
-          name,
-          description,
-          price: web3.utils.toWei(price, 'ether'),
-          category,
-          color,
-          size,
-          condition,
-          brand_name: brandName,
-          token_id: result.events.Transfer.returnValues.tokenId,
-          seller_address: account,
-          approved: false,
-        },
-      ]);
+      const { error } = await supabase.from("products").insert({
+        name,
+        description,
+        price: web3.utils.toWei(price, 'ether'),
+        category,
+        color,
+        size,
+        condition,
+        brand_name: brandName,
+        token_id: result.events.Transfer.returnValues.tokenId,
+        seller_address: account,
+        approved: false,
+      });
 
       if (error) throw error;
 

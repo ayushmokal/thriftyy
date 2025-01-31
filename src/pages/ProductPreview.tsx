@@ -109,10 +109,15 @@ export default function ProductPreview() {
       });
 
       // Update product status in Supabase
-      await supabase
+      const { error } = await supabase
         .from("products")
-        .update({ sold: true, buyer_address: account })
+        .update({ 
+          buyer_address: account,
+          approved: false  // Set to false since it's been purchased
+        })
         .eq("id", product.id);
+
+      if (error) throw error;
 
     } catch (error: any) {
       console.error("Error processing purchase:", error);

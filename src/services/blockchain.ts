@@ -2,7 +2,6 @@ import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
 import { ThriftyMarketplace } from '../contracts/types/ThriftyMarketplace';
 import ThriftyMarketplaceABI from '../contracts/ThriftyMarketplace.json';
-import { useToast } from "@/hooks/use-toast";
 
 const CONTRACT_ADDRESS = '0xYourDeployedContractAddressHere';
 
@@ -16,7 +15,7 @@ export const createProductNFT = async (
     const contract = new web3.eth.Contract(
       ThriftyMarketplaceABI.abi as AbiItem[],
       CONTRACT_ADDRESS
-    );
+    ) as unknown as ThriftyMarketplace;
 
     const priceInWei = web3.utils.toWei(price, 'ether');
     
@@ -41,7 +40,7 @@ export const buyProductNFT = async (
     const contract = new web3.eth.Contract(
       ThriftyMarketplaceABI.abi as AbiItem[],
       CONTRACT_ADDRESS
-    );
+    ) as unknown as ThriftyMarketplace;
 
     const priceInWei = web3.utils.toWei(price, 'ether');
     
