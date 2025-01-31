@@ -51,17 +51,25 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
 
-      const accounts = await window.ethereum.request({
-        method: 'eth_requestAccounts',
-      });
+      if (typeof window.ethereum !== 'undefined') {
+        const accounts = await window.ethereum.request({
+          method: 'eth_requestAccounts',
+        });
 
-      setAccount(accounts[0]);
-      setIsConnected(true);
-      
-      toast({
-        title: "Wallet Connected",
-        description: "Your wallet has been successfully connected!",
-      });
+        setAccount(accounts[0]);
+        setIsConnected(true);
+        
+        toast({
+          title: "Wallet Connected",
+          description: "Your wallet has been successfully connected!",
+        });
+      } else {
+        toast({
+          title: "MetaMask Required",
+          description: "Please install MetaMask to connect your wallet",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       console.error("Error connecting wallet:", error);
       toast({
