@@ -6,6 +6,8 @@ import Footer from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { useWeb3 } from "@/context/Web3Context";
+import { mintProductNFT } from "@/services/blockchain";
 
 interface Product {
   id: string;
@@ -26,6 +28,7 @@ export default function ProductPreview() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const { web3, account, isConnected } = useWeb3();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -56,11 +59,33 @@ export default function ProductPreview() {
   const handleBuyNow = async () => {
     if (!product) return;
     
-    // For now, show a success message
-    toast({
-      title: "Order Placed!",
-      description: `Thank you for purchasing ${product.name}. We'll contact you soon with delivery details.`,
-    });
+    if (!isConnected) {
+      toast({
+        title: "Wallet Not Connected",
+        description: "Please connect your wallet to purchase this item.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      if (web3 && account) {
+        // Mint NFT for the product
+        await mintProductNFT(web3, account, product);
+        
+        toast({
+          title: "Purchase Successful!",
+          description: "NFT has been minted and transferred to your wallet.",
+        });
+      }
+    } catch (error) {
+      console.error("Error processing purchase:", error);
+      toast({
+        title: "Purchase Failed",
+        description: "Failed to process the purchase. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   if (loading) {

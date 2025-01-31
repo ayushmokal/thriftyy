@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+import { Web3Provider } from "./context/Web3Context";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Thrift from "./pages/Thrift";
