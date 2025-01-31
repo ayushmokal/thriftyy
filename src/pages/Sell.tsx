@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { useWeb3 } from "@/context/Web3Context";
+import { createProductNFT, uploadToIPFS } from "@/services/blockchain";
 import {
   Select,
   SelectContent,
@@ -28,23 +30,66 @@ const Sell = () => {
   const [size, setSize] = useState("");
   const [condition, setCondition] = useState("");
   const [brandName, setBrandName] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { web3, account, isConnected } = useWeb3();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!isConnected) {
+      toast({
+        title: "Wallet Not Connected",
+        description: "Please connect your wallet to list an item.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
+      setLoading(true);
+
+      // Create metadata for IPFS
+      const metadata = {
+        name,
+        description,
+        attributes: [
+          { trait_type: "Category", value: category },
+          { trait_type: "Brand", value: brandName },
+          { trait_type: "Condition", value: condition },
+          { trait_type: "Size", value: size },
+          { trait_type: "Color", value: color }
+        ]
+      };
+
+      // Upload metadata to IPFS
+      const tokenURI = await uploadToIPFS(metadata);
+
+      if (!web3 || !account) throw new Error("Web3 not initialized");
+
+      // Create NFT
+      const result = await createProductNFT(
+        web3,
+        account,
+        tokenURI,
+        web3.utils.toWei(price, 'ether')
+      );
+
+      // Save to Supabase
       const { error } = await supabase.from("products").insert([
         {
           name,
           description,
-          price: parseFloat(price),
+          price: web3.utils.toWei(price, 'ether'),
           category,
           color,
           size,
           condition,
           brand_name: brandName,
-          approved: false, // New products start as unapproved
+          token_id: result.events.Transfer.returnValues.tokenId,
+          seller_address: account,
+          approved: false,
         },
       ]);
 
@@ -52,27 +97,20 @@ const Sell = () => {
 
       toast({
         title: "Success",
-        description: "Your product has been submitted for review",
+        description: "Your product has been listed and submitted for review",
       });
 
-      // Reset form
-      setName("");
-      setDescription("");
-      setPrice("");
-      setCategory("Jeans");
-      setColor("");
-      setSize("");
-      setCondition("");
-      setBrandName("");
-      
-      // Redirect to home page
+      // Reset form and redirect
       navigate("/");
     } catch (error: any) {
+      console.error("Error listing product:", error);
       toast({
         title: "Error",
-        description: error.message,
+        description: error.message || "Failed to list product",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -81,7 +119,7 @@ const Sell = () => {
       <Navbar />
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8">Sell Your Clothes</h1>
+          <h1 className="text-3xl font-bold mb-8">List Your Item as NFT</h1>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="name">Product Name</Label>
@@ -104,7 +142,7 @@ const Sell = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="price">Price (in Rs)</Label>
+              <Label htmlFor="price">Price (in ETH)</Label>
               <Input
                 id="price"
                 type="number"
@@ -171,9 +209,19 @@ const Sell = () => {
               />
             </div>
 
-            <Button type="submit" className="w-full">
-              Submit for Review
+            <Button 
+              type="submit" 
+              className="w-full"
+              disabled={loading || !isConnected}
+            >
+              {loading ? "Creating NFT..." : "List Item as NFT"}
             </Button>
+
+            {!isConnected && (
+              <p className="text-sm text-muted-foreground text-center">
+                Connect your wallet to list an item
+              </p>
+            )}
           </form>
         </div>
       </main>

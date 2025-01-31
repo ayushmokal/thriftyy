@@ -1,65 +1,68 @@
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
+import { ThriftyMarketplace } from '../contracts/types/ThriftyMarketplace';
+import ThriftyMarketplaceABI from '../contracts/ThriftyMarketplace.json';
+import { useToast } from "@/hooks/use-toast";
 
-// Simple NFT Contract ABI (you would need to deploy this contract separately)
-const NFT_ABI: AbiItem[] = [
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "tokenURI",
-        "type": "string"
-      }
-    ],
-    "name": "mintNFT",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  }
-];
+const CONTRACT_ADDRESS = '0xYourDeployedContractAddressHere';
 
-export const mintProductNFT = async (web3: Web3, account: string, productData: any) => {
+export const createProductNFT = async (
+  web3: Web3,
+  account: string,
+  tokenURI: string,
+  price: string
+) => {
   try {
-    // This would be your deployed NFT contract address
-    const contractAddress = '0xYourContractAddressHere';
-    const contract = new web3.eth.Contract(NFT_ABI, contractAddress);
+    const contract = new web3.eth.Contract(
+      ThriftyMarketplaceABI.abi as AbiItem[],
+      CONTRACT_ADDRESS
+    );
 
-    // Create metadata for the NFT
-    const metadata = {
-      name: productData.name,
-      description: productData.description,
-      image: productData.image,
-      attributes: [
-        {
-          trait_type: "Category",
-          value: productData.category
-        },
-        {
-          trait_type: "Brand",
-          value: productData.brand_name
-        },
-        {
-          trait_type: "Condition",
-          value: productData.condition
-        }
-      ]
-    };
-
-    // In a real application, you would upload this metadata to IPFS
-    // and use the IPFS hash as the tokenURI
-    const tokenURI = JSON.stringify(metadata);
-
-    // Mint the NFT
-    const result = await contract.methods.mintNFT(tokenURI).send({ from: account });
+    const priceInWei = web3.utils.toWei(price, 'ether');
+    
+    const result = await contract.methods
+      .createProduct(tokenURI, priceInWei)
+      .send({ from: account });
+      
     return result;
   } catch (error) {
-    console.error("Error minting NFT:", error);
+    console.error("Error creating product NFT:", error);
+    throw error;
+  }
+};
+
+export const buyProductNFT = async (
+  web3: Web3,
+  account: string,
+  tokenId: number,
+  price: string
+) => {
+  try {
+    const contract = new web3.eth.Contract(
+      ThriftyMarketplaceABI.abi as AbiItem[],
+      CONTRACT_ADDRESS
+    );
+
+    const priceInWei = web3.utils.toWei(price, 'ether');
+    
+    const result = await contract.methods
+      .buyProduct(tokenId)
+      .send({ from: account, value: priceInWei });
+      
+    return result;
+  } catch (error) {
+    console.error("Error buying product NFT:", error);
+    throw error;
+  }
+};
+
+export const uploadToIPFS = async (metadata: any) => {
+  try {
+    // Here you would implement IPFS upload logic
+    // For now, we'll return a mock IPFS hash
+    return `ipfs://QmYourIPFSHash`;
+  } catch (error) {
+    console.error("Error uploading to IPFS:", error);
     throw error;
   }
 };

@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useWeb3 } from "@/context/Web3Context";
-import { mintProductNFT } from "@/services/blockchain";
+import { buyProductNFT, uploadToIPFS } from "@/services/blockchain";
 
 interface Product {
   id: string;
@@ -21,12 +21,14 @@ interface Product {
   model_name: string;
   condition: string;
   product_images: { image_url: string }[];
+  token_id?: number;
 }
 
 export default function ProductPreview() {
   const { id } = useParams();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
+  const [purchasing, setPurchasing] = useState(false);
   const { toast } = useToast();
   const { web3, account, isConnected } = useWeb3();
 
@@ -48,6 +50,11 @@ export default function ProductPreview() {
         setProduct(data);
       } catch (error) {
         console.error("Error fetching product:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load product details",
+          variant: "destructive",
+        });
       } finally {
         setLoading(false);
       }
@@ -57,7 +64,7 @@ export default function ProductPreview() {
   }, [id]);
 
   const handleBuyNow = async () => {
-    if (!product) return;
+    if (!product || !web3 || !account) return;
     
     if (!isConnected) {
       toast({
@@ -69,22 +76,53 @@ export default function ProductPreview() {
     }
 
     try {
-      if (web3 && account) {
-        // Mint NFT for the product
-        await mintProductNFT(web3, account, product);
-        
-        toast({
-          title: "Purchase Successful!",
-          description: "NFT has been minted and transferred to your wallet.",
-        });
-      }
-    } catch (error) {
+      setPurchasing(true);
+      
+      // Create metadata for IPFS
+      const metadata = {
+        name: product.name,
+        description: product.description,
+        image: product.product_images[0]?.image_url,
+        attributes: [
+          { trait_type: "Category", value: product.category },
+          { trait_type: "Brand", value: product.brand_name },
+          { trait_type: "Condition", value: product.condition },
+          { trait_type: "Size", value: product.size },
+          { trait_type: "Color", value: product.color }
+        ]
+      };
+
+      // Upload metadata to IPFS
+      const tokenURI = await uploadToIPFS(metadata);
+
+      // Purchase the NFT
+      await buyProductNFT(
+        web3,
+        account,
+        product.token_id!,
+        product.price.toString()
+      );
+
+      toast({
+        title: "Purchase Successful!",
+        description: "The item has been purchased and NFT transferred to your wallet.",
+      });
+
+      // Update product status in Supabase
+      await supabase
+        .from("products")
+        .update({ sold: true, buyer_address: account })
+        .eq("id", product.id);
+
+    } catch (error: any) {
       console.error("Error processing purchase:", error);
       toast({
         title: "Purchase Failed",
-        description: "Failed to process the purchase. Please try again.",
+        description: error.message || "Failed to process the purchase",
         variant: "destructive",
       });
+    } finally {
+      setPurchasing(false);
     }
   };
 
@@ -118,14 +156,22 @@ export default function ProductPreview() {
             <div className="space-y-6">
               <div>
                 <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-                <p className="text-2xl font-semibold text-primary mb-4">₹{product.price}</p>
+                <p className="text-2xl font-semibold text-primary mb-4">
+                  {web3?.utils.fromWei(product.price.toString(), 'ether')} ETH
+                </p>
                 <Button 
                   className="w-full mb-6" 
                   size="lg"
                   onClick={handleBuyNow}
+                  disabled={purchasing || !isConnected}
                 >
-                  Buy Now
+                  {purchasing ? "Processing..." : "Buy Now with ETH"}
                 </Button>
+                {!isConnected && (
+                  <p className="text-sm text-muted-foreground text-center">
+                    Connect your wallet to purchase this item
+                  </p>
+                )}
               </div>
               
               <div className="space-y-4">
