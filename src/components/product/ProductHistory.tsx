@@ -1,10 +1,10 @@
-import { ProductHistory, ProductOwner } from '@/types/product';
+import type { ProductHistory as ProductHistoryType, ProductOwner } from '@/types/product';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { History, User, Link as LinkIcon } from 'lucide-react';
 import { formatDistance } from 'date-fns';
 
 interface ProductHistoryProps {
-  history: ProductHistory;
+  history: ProductHistoryType;
 }
 
 export function ProductHistory({ history }: ProductHistoryProps) {
