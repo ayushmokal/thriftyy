@@ -188,7 +188,7 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
     try {
       if (!window.ethereum) throw new Error("MetaMask not installed");
 
-      await window.ethereum.request({
+      const wasAdded = await window.ethereum.request({
         method: 'wallet_watchAsset',
         params: {
           type: 'ERC20',
@@ -201,10 +201,12 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
         },
       });
 
-      toast({
-        title: "Token Added",
-        description: `Successfully added ${symbol} token to MetaMask`,
-      });
+      if (wasAdded) {
+        toast({
+          title: "Token Added",
+          description: `Successfully added ${symbol} token to MetaMask`,
+        });
+      }
     } catch (error) {
       console.error("Error adding token:", error);
       toast({
