@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LogOut, Plus, RefreshCw } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
+import { NfcTagWriter } from "@/components/admin/NfcTagWriter";
 
 type Product = Database["public"]["Tables"]["products"]["Row"];
 type ContactSubmission = Database["public"]["Tables"]["contact_submissions"]["Row"];
@@ -438,3 +439,4 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+
