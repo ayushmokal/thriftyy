@@ -13,18 +13,25 @@ contract ThriftyMarketplace is ERC721, ReentrancyGuard {
         uint256 tokenId;
         address payable seller;
         uint256 price;
+        string nfcTagId;
         bool sold;
     }
     
     mapping(uint256 => Product) public products;
+    mapping(string => uint256) public nfcTagToToken;
     
-    event ProductListed(uint256 tokenId, address seller, uint256 price);
+    event ProductListed(uint256 tokenId, address seller, uint256 price, string nfcTagId);
     event ProductSold(uint256 tokenId, address seller, address buyer, uint256 price);
     
     constructor() ERC721("ThriftyNFT", "TNFT") {}
     
-    function createProduct(string memory tokenURI, uint256 price) public returns (uint256) {
+    function createProduct(
+        string memory tokenURI, 
+        uint256 price,
+        string memory nfcTagId
+    ) public returns (uint256) {
         require(price > 0, "Price must be greater than 0");
+        require(nfcTagToToken[nfcTagId] == 0, "NFC tag already registered");
         
         _tokenIds.increment();
         uint256 newTokenId = _tokenIds.current();
@@ -36,10 +43,13 @@ contract ThriftyMarketplace is ERC721, ReentrancyGuard {
             newTokenId,
             payable(msg.sender),
             price,
+            nfcTagId,
             false
         );
         
-        emit ProductListed(newTokenId, msg.sender, price);
+        nfcTagToToken[nfcTagId] = newTokenId;
+        
+        emit ProductListed(newTokenId, msg.sender, price, nfcTagId);
         return newTokenId;
     }
     
@@ -53,5 +63,11 @@ contract ThriftyMarketplace is ERC721, ReentrancyGuard {
         product.seller.transfer(msg.value);
         
         emit ProductSold(tokenId, product.seller, msg.sender, product.price);
+    }
+    
+    function getTokenByNfcTag(string memory nfcTagId) public view returns (uint256) {
+        uint256 tokenId = nfcTagToToken[nfcTagId];
+        require(tokenId != 0, "NFC tag not registered");
+        return tokenId;
     }
 }
