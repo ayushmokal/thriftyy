@@ -73,21 +73,19 @@ const Sell = () => {
         web3,
         account,
         tokenURI,
-        web3.utils.toWei(price, 'ether')
+        price
       );
 
-      // Save to Supabase
+      // Save to Supabase with correct types
       const { error } = await supabase.from("products").insert({
-        name,
-        description,
-        price: web3.utils.toWei(price, 'ether'),
-        category,
-        color,
-        size,
-        condition,
+        name: name,
+        description: description,
+        price: parseFloat(price), // Convert string to number
+        category: category,
+        color: color,
+        size: size,
+        condition: condition,
         brand_name: brandName,
-        token_id: result.events.Transfer.returnValues.tokenId,
-        seller_address: account,
         approved: false,
       });
 
