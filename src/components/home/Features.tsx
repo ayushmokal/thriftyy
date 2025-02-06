@@ -2,8 +2,8 @@ import { motion } from "framer-motion";
 
 export function Features() {
   return (
-    <section className="relative py-24 overflow-hidden">
-      <div className="absolute inset-0 bg-grid-white/10 bg-grid-16 [mask-image:radial-gradient(white,transparent_85%)]" />
+    <section className="relative py-24 overflow-hidden bg-background cyber-grid">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background" />
       
       <div className="container relative mx-auto px-4">
         <motion.div 
@@ -12,8 +12,8 @@ export function Features() {
           transition={{ duration: 0.6 }}
           className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-24"
         >
-          <div className="relative group">
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary to-purple-600 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300" />
+          <div className="relative group cyber-card p-2">
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary via-secondary to-accent rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300" />
             <img
               src="https://cdn.hswstatic.com/gif/nfc-4.jpg"
               alt="Scanning clothes with NFC technology"
@@ -25,7 +25,7 @@ export function Features() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h2 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">
+            <h2 className="text-4xl md:text-6xl font-bold mb-6 neon-text bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent">
               INNOVATION BOUGHT TO CLOTHING
             </h2>
           </motion.div>
@@ -36,7 +36,7 @@ export function Features() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-3xl md:text-4xl font-bold mb-4"
+            className="text-3xl md:text-4xl font-bold mb-4 neon-text"
           >
             What makes us stand out?
           </motion.h2>
@@ -69,11 +69,11 @@ export function Features() {
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="flex gap-6 group"
+                className="flex gap-6 group cyber-card p-6 rounded-xl"
               >
                 <img src={feature.icon} alt={feature.title} className="w-16 h-16 transform group-hover:scale-110 transition-transform duration-300" />
                 <div>
-                  <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
+                  <h3 className="text-xl font-semibold mb-3 neon-text">{feature.title}</h3>
                   <p className="text-muted-foreground">{feature.description}</p>
                 </div>
               </motion.div>
@@ -83,9 +83,9 @@ export function Features() {
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
-            className="relative group"
+            className="relative cyber-card p-2 rounded-xl"
           >
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary to-purple-600 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300" />
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary via-secondary to-accent rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300" />
             <img
               src="https://cdn.builder.io/api/v1/image/assets/TEMP/e308861900c91ad228b93e30af1f0bbd03ae1e0d2a26f5dc9a3f53c39e4b1d86"
               alt="Feature showcase"
