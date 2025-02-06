@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { GooeyText } from "@/components/ui/gooey-text-morphing";
 
 export function Hero() {
   return (
@@ -17,8 +18,16 @@ export function Hero() {
             className="space-y-8"
           >
             <h1 className="text-5xl md:text-7xl font-bold leading-tight neon-text bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent">
-              NFC<br />CLOTHING & THRIFTING
+              NFC
             </h1>
+            <div className="h-[200px] -mt-4">
+              <GooeyText
+                texts={["Thrifting", "Using", "NFC system", "With Blockchain"]}
+                morphTime={1}
+                cooldownTime={0.25}
+                className="font-bold neon-text"
+              />
+            </div>
             <p className="text-xl text-muted-foreground">
               Discover a new era of thrifting with Thrifty, India's first thrifting site that uses NFC technology to revolutionize how you shop pre-loved fashion.
             </p>
