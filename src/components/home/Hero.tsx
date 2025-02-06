@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { GooeyText } from "@/components/ui/gooey-text-morphing";
+import { GradientButton } from "@/components/ui/gradient-button";
 
 export function Hero() {
   return (
@@ -31,11 +31,10 @@ export function Hero() {
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="cyber-border"
             >
-              <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-primary via-secondary to-accent hover:opacity-90 transition-all duration-300">
+              <GradientButton>
                 Get Started
-              </Button>
+              </GradientButton>
             </motion.div>
           </motion.div>
 
