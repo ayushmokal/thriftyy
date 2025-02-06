@@ -17,10 +17,7 @@ export function Hero() {
             transition={{ duration: 0.6 }}
             className="space-y-8"
           >
-            <h1 className="text-5xl md:text-7xl font-bold leading-tight neon-text bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent">
-              NFC
-            </h1>
-            <div className="h-[200px] -mt-4">
+            <div className="h-[200px]">
               <GooeyText
                 texts={["Thrifting", "Using", "NFC system", "With Blockchain"]}
                 morphTime={1}
