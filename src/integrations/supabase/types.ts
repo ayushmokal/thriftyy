@@ -11,56 +11,56 @@ export type Database = {
     Tables: {
       contact_submissions: {
         Row: {
-          created_at: string | null
+          created_at: string
           email: string
           id: string
           message: string
           name: string
-          status: string | null
+          status: string
         }
         Insert: {
-          created_at?: string | null
+          created_at?: string
           email: string
           id?: string
           message: string
           name: string
-          status?: string | null
+          status?: string
         }
         Update: {
-          created_at?: string | null
+          created_at?: string
           email?: string
           id?: string
           message?: string
           name?: string
-          status?: string | null
+          status?: string
         }
         Relationships: []
       }
       nfc_tag_writes: {
         Row: {
-          created_at: string | null
           id: string
           nfc_tag_id: string
           product_id: string | null
-          write_data: Json
+          write_data: Json | null
+          write_date: string | null
           write_method: string
           write_status: string | null
         }
         Insert: {
-          created_at?: string | null
           id?: string
           nfc_tag_id: string
           product_id?: string | null
-          write_data: Json
+          write_data?: Json | null
+          write_date?: string | null
           write_method: string
           write_status?: string | null
         }
         Update: {
-          created_at?: string | null
           id?: string
           nfc_tag_id?: string
           product_id?: string | null
-          write_data?: Json
+          write_data?: Json | null
+          write_date?: string | null
           write_method?: string
           write_status?: string | null
         }
@@ -76,23 +76,23 @@ export type Database = {
       }
       product_images: {
         Row: {
-          created_at: string | null
+          created_at: string
           id: string
-          image_type: string | null
+          image_type: string
           image_url: string
           product_id: string | null
         }
         Insert: {
-          created_at?: string | null
+          created_at?: string
           id?: string
-          image_type?: string | null
+          image_type: string
           image_url: string
           product_id?: string | null
         }
         Update: {
-          created_at?: string | null
+          created_at?: string
           id?: string
-          image_type?: string | null
+          image_type?: string
           image_url?: string
           product_id?: string | null
         }
@@ -109,63 +109,72 @@ export type Database = {
       products: {
         Row: {
           approved: boolean | null
+          blockchain_network: string | null
           brand_name: string | null
-          buyer_address: string | null
           category: Database["public"]["Enums"]["product_category"]
           color: string | null
           condition: string | null
           contract_address: string | null
-          created_at: string | null
+          created_at: string
           description: string | null
           id: string
+          manufactured_date: string | null
+          materials: string[] | null
           model_name: string | null
           name: string
           nfc_tag_id: string | null
+          original_price: number | null
           price: number
-          seller_address: string | null
           size: string | null
+          texture: string | null
           token_id: number | null
-          updated_at: string | null
+          updated_at: string
         }
         Insert: {
           approved?: boolean | null
+          blockchain_network?: string | null
           brand_name?: string | null
-          buyer_address?: string | null
           category: Database["public"]["Enums"]["product_category"]
           color?: string | null
           condition?: string | null
           contract_address?: string | null
-          created_at?: string | null
+          created_at?: string
           description?: string | null
           id?: string
+          manufactured_date?: string | null
+          materials?: string[] | null
           model_name?: string | null
           name: string
           nfc_tag_id?: string | null
+          original_price?: number | null
           price: number
-          seller_address?: string | null
           size?: string | null
+          texture?: string | null
           token_id?: number | null
-          updated_at?: string | null
+          updated_at?: string
         }
         Update: {
           approved?: boolean | null
+          blockchain_network?: string | null
           brand_name?: string | null
-          buyer_address?: string | null
           category?: Database["public"]["Enums"]["product_category"]
           color?: string | null
           condition?: string | null
           contract_address?: string | null
-          created_at?: string | null
+          created_at?: string
           description?: string | null
           id?: string
+          manufactured_date?: string | null
+          materials?: string[] | null
           model_name?: string | null
           name?: string
           nfc_tag_id?: string | null
+          original_price?: number | null
           price?: number
-          seller_address?: string | null
           size?: string | null
+          texture?: string | null
           token_id?: number | null
-          updated_at?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
