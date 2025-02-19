@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,8 +6,6 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Facebook, Twitter, Instagram, Youtube, Linkedin, Home } from "lucide-react";
 import { GooeyText } from "@/components/ui/gooey-text-morphing";
-import { useWeb3 } from "@/context/Web3Context";
-import { buyProductNFT, uploadToIPFS } from "@/services/blockchain";
 import {
   Table,
   TableBody,
@@ -52,9 +49,7 @@ export default function NfcProductPreview() {
   const { id } = useParams();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
-  const [purchasing, setPurchasing] = useState(false);
   const { toast } = useToast();
-  const { web3, account, isConnected } = useWeb3();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -86,74 +81,6 @@ export default function NfcProductPreview() {
 
     fetchProduct();
   }, [id]);
-
-  const handleBuyNow = async () => {
-    if (!product || !web3 || !account) return;
-    
-    if (!isConnected) {
-      toast({
-        title: "Wallet Not Connected",
-        description: "Please connect your wallet to purchase this item.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      setPurchasing(true);
-      
-      // Create metadata for IPFS
-      const metadata = {
-        name: product.name,
-        description: product.description,
-        image: product.product_images[0]?.image_url,
-        attributes: [
-          { trait_type: "Category", value: product.category },
-          { trait_type: "Brand", value: product.brand_name },
-          { trait_type: "Condition", value: product.condition },
-          { trait_type: "Size", value: product.size },
-          { trait_type: "Color", value: product.color }
-        ]
-      };
-
-      // Upload metadata to IPFS
-      const tokenURI = await uploadToIPFS(metadata);
-
-      // Purchase the NFT
-      await buyProductNFT(
-        web3,
-        account,
-        product.token_id!,
-        product.price.toString()
-      );
-
-      toast({
-        title: "Purchase Successful!",
-        description: "The item has been purchased and NFT transferred to your wallet.",
-      });
-
-      // Update product status in Supabase
-      const { error } = await supabase
-        .from("products")
-        .update({ 
-          buyer_address: account,
-          approved: false
-        })
-        .eq("id", product.id);
-
-      if (error) throw error;
-
-    } catch (error: any) {
-      console.error("Error processing purchase:", error);
-      toast({
-        title: "Purchase Failed",
-        description: error.message || "Failed to process the purchase",
-        variant: "destructive",
-      });
-    } finally {
-      setPurchasing(false);
-    }
-  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -237,20 +164,6 @@ export default function NfcProductPreview() {
             <p className="text-lg">
               Status: <span className="text-green-500 font-semibold">Available</span>
             </p>
-            
-            {/* Buy Now Button */}
-            <Button 
-              className="w-full py-6 text-lg font-semibold cyber-border" 
-              onClick={handleBuyNow}
-              disabled={purchasing || !isConnected}
-            >
-              {purchasing ? "Processing..." : "Buy Now with ETH"}
-            </Button>
-            {!isConnected && (
-              <p className="text-sm text-muted-foreground text-center">
-                Connect your wallet to purchase this item
-              </p>
-            )}
             
             <div className="grid grid-cols-2 gap-4 mt-4">
               <div>
