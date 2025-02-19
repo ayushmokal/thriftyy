@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -35,6 +34,7 @@ interface Product {
   product_images: { image_url: string }[];
   token_id?: number;
   contract_address?: string;
+  created_at: string; // Added this field
 }
 
 export default function ProductPreview() {
