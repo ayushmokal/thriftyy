@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { Facebook, Twitter, Instagram, Youtube, Linkedin } from "lucide-react";
+import { GooeyText } from "@/components/ui/gooey-text-morphing";
 import {
   Table,
   TableBody,
@@ -11,6 +13,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+
+const sampleNftData = [
+  { name: 'Jan', value: 12 },
+  { name: 'Feb', value: 19 },
+  { name: 'Mar', value: 15 },
+  { name: 'Apr', value: 25 },
+  { name: 'May', value: 22 },
+  { name: 'Jun', value: 30 }
+];
 
 interface Product {
   id: string;
@@ -79,6 +91,16 @@ export default function NfcProductPreview() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
+      {/* THRIFTY Marquee */}
+      <div className="w-full h-16 mb-8 overflow-hidden bg-primary/10 rounded-lg">
+        <div className="h-full flex items-center">
+          <GooeyText
+            texts={["THRIFTY", "WEB3", "NFT", "FASHION"]}
+            textClassName="font-bold text-primary"
+          />
+        </div>
+      </div>
+
       <Card className="max-w-4xl mx-auto p-6">
         <div className="space-y-8">
           {/* Product Images */}
@@ -94,6 +116,25 @@ export default function NfcProductPreview() {
                 No image available
               </div>
             )}
+          </div>
+
+          {/* Social Media Links */}
+          <div className="flex justify-center space-x-4">
+            <a href="#" className="p-2 rounded-full hover:bg-gray-100">
+              <Facebook className="w-6 h-6 text-primary" />
+            </a>
+            <a href="#" className="p-2 rounded-full hover:bg-gray-100">
+              <Twitter className="w-6 h-6 text-primary" />
+            </a>
+            <a href="#" className="p-2 rounded-full hover:bg-gray-100">
+              <Instagram className="w-6 h-6 text-primary" />
+            </a>
+            <a href="#" className="p-2 rounded-full hover:bg-gray-100">
+              <Youtube className="w-6 h-6 text-primary" />
+            </a>
+            <a href="#" className="p-2 rounded-full hover:bg-gray-100">
+              <Linkedin className="w-6 h-6 text-primary" />
+            </a>
           </div>
 
           {/* Product Info */}
@@ -130,6 +171,21 @@ export default function NfcProductPreview() {
                   <p>{product.materials.join(", ")}</p>
                 </div>
               )}
+            </div>
+          </div>
+
+          {/* NFT Statistics Chart */}
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold mb-4">NFT Trading Activity</h2>
+            <div className="h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={sampleNftData}>
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="value" fill="#8B5CF6" />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </div>
 
