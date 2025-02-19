@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,6 +9,14 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useWeb3 } from "@/context/Web3Context";
 import { buyProductNFT, uploadToIPFS } from "@/services/blockchain";
+import { NfcTagWriter } from "@/components/admin/NfcTagWriter";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface Product {
   id: string;
@@ -20,8 +29,12 @@ interface Product {
   brand_name: string;
   model_name: string;
   condition: string;
+  materials?: string[];
+  seller_address?: string;
+  buyer_address?: string;
   product_images: { image_url: string }[];
   token_id?: number;
+  contract_address?: string;
 }
 
 export default function ProductPreview() {
@@ -157,7 +170,34 @@ export default function ProductPreview() {
                   No image available
                 </div>
               )}
+              
+              <div className="mt-8">
+                <h2 className="text-xl font-semibold mb-4">Product Statistics</h2>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableCell className="font-medium">Metric</TableCell>
+                      <TableCell>Value</TableCell>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>Listed Date</TableCell>
+                      <TableCell>{new Date(product.created_at).toLocaleDateString()}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Token ID</TableCell>
+                      <TableCell>{product.token_id || "Not minted"}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Status</TableCell>
+                      <TableCell>{product.buyer_address ? "Sold" : "Available"}</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
             </div>
+            
             <div className="space-y-6">
               <div>
                 <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
@@ -222,10 +262,43 @@ export default function ProductPreview() {
                       <p>{product.condition}</p>
                     </div>
                   )}
+                  {product.materials && product.materials.length > 0 && (
+                    <div>
+                      <h3 className="font-medium text-gray-700">Materials</h3>
+                      <p>{product.materials.join(", ")}</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                  <h2 className="text-xl font-semibold mb-4">Ownership Details</h2>
+                  {product.seller_address && (
+                    <div className="mb-2">
+                      <h3 className="font-medium text-gray-700">Seller</h3>
+                      <p className="text-sm break-all">{product.seller_address}</p>
+                    </div>
+                  )}
+                  {product.buyer_address && (
+                    <div>
+                      <h3 className="font-medium text-gray-700">Current Owner</h3>
+                      <p className="text-sm break-all">{product.buyer_address}</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
+
+          {/* NFC Tag Writer Section - Only visible to admins */}
+          {product.token_id && (
+            <div className="mt-8">
+              <NfcTagWriter 
+                productId={product.id}
+                tokenId={product.token_id}
+                contractAddress={product.contract_address}
+              />
+            </div>
+          )}
         </Card>
       </main>
       <Footer />
