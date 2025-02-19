@@ -9,7 +9,166 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      contact_submissions: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          message: string
+          name: string
+          status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          message: string
+          name: string
+          status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          status?: string | null
+        }
+        Relationships: []
+      }
+      nfc_tag_writes: {
+        Row: {
+          created_at: string | null
+          id: string
+          nfc_tag_id: string
+          product_id: string | null
+          write_data: Json
+          write_method: string
+          write_status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          nfc_tag_id: string
+          product_id?: string | null
+          write_data: Json
+          write_method: string
+          write_status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          nfc_tag_id?: string
+          product_id?: string | null
+          write_data?: Json
+          write_method?: string
+          write_status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nfc_tag_writes_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_images: {
+        Row: {
+          created_at: string | null
+          id: string
+          image_type: string | null
+          image_url: string
+          product_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          image_type?: string | null
+          image_url: string
+          product_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          image_type?: string | null
+          image_url?: string
+          product_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_images_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          approved: boolean | null
+          brand_name: string | null
+          buyer_address: string | null
+          category: Database["public"]["Enums"]["product_category"]
+          color: string | null
+          condition: string | null
+          contract_address: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          model_name: string | null
+          name: string
+          nfc_tag_id: string | null
+          price: number
+          seller_address: string | null
+          size: string | null
+          token_id: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          approved?: boolean | null
+          brand_name?: string | null
+          buyer_address?: string | null
+          category: Database["public"]["Enums"]["product_category"]
+          color?: string | null
+          condition?: string | null
+          contract_address?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          model_name?: string | null
+          name: string
+          nfc_tag_id?: string | null
+          price: number
+          seller_address?: string | null
+          size?: string | null
+          token_id?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          approved?: boolean | null
+          brand_name?: string | null
+          buyer_address?: string | null
+          category?: Database["public"]["Enums"]["product_category"]
+          color?: string | null
+          condition?: string | null
+          contract_address?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          model_name?: string | null
+          name?: string
+          nfc_tag_id?: string | null
+          price?: number
+          seller_address?: string | null
+          size?: string | null
+          token_id?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +177,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      product_category: "Jeans" | "Shirts" | "Tshirts" | "Shoes" | "Watches"
     }
     CompositeTypes: {
       [_ in never]: never
